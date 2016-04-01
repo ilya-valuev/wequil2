@@ -1,0 +1,180 @@
+#-----------------------------------------------------------------------
+#----------------------------------------------------------------------- 
+
+# This section stores all the platform-specific settings.
+# Feel free to add you own favorites.
+
+ifeq (kintech,$(_ARCH))
+    FFTW_PATH = /work/lesha/fftw/
+    USRLIB =  -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -w -DUNIX $(MPI_PREPROC_FLAG) 
+    OPT_FLAG = -O2
+    C = /usr/local/mpich/bin/mpicxx
+    CC = /usr/local/mpich/bin/mpicxx
+    CPP = /usr/local/mpich/bin/mpicxx
+    INCLUDE_FLAG = -I$(INCDIR) -I$(PHOTDIR) -I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = $(OPT_FLAG) $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = $(OPT_FLAG) -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = $(OPT_FLAG) $(USRLIB_FLAG)
+endif
+
+# kintech debug
+ifeq (kintechd,$(_ARCH))
+    FFTW_PATH = /work/lesha/fftw/
+    USRLIB =  -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -w -DUNIX $(MPI_PREPROC_FLAG) 
+    OPT_FLAG = -g
+    C = /usr/local/mpich/bin/mpicxx
+    CC = /usr/local/mpich/bin/mpicxx
+    CPP = /usr/local/mpich/bin/mpicxx
+    INCLUDE_FLAG = -I$(INCDIR) -I$(PHOTDIR) -I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = $(OPT_FLAG) $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = $(OPT_FLAG) -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = $(OPT_FLAG) $(USRLIB_FLAG)
+endif
+
+
+
+# Options for MVS6000 with intel compilers
+ifeq (mvs6ki,$(_ARCH))
+    FFTW_PATH = /nethome/valuev/extern/fftw-3.1.2/lib_6k/
+    USRLIB = -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -DUNIX $(MPI_PREPROC_FLAG) 
+    C = mpicc
+    CC = mpicxx
+    CPP = mpicxx
+    INCLUDE_FLAG = -I$(INCDIR) -I$(PHOTDIR) -I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = -O2 $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = -O2 -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = -O2 $(USRLIB_FLAG)
+endif
+
+# NWO5 with gnu 2.96 compiler  
+ifeq (nwo5gnu,$(_ARCH))
+    FFTW_PATH = /opt/fftw3gnu
+    USRLIB = -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -DUNIX $(MPI_PREPROC_FLAG) -g 
+    C = gcc
+    CC = g++
+    CPP = g++
+    INCLUDE_FLAG = -I$(INCDIR) -I$(PHOTDIR) -I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = $(OPT_FLAG) $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = $(OPT_FLAG) -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = $(OPT_FLAG) $(USRLIB_FLAG)
+    
+    USRLIB_FLAG = 
+    CFLAGS = -O2 $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = -O2 -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = -O2 $(USRLIB_FLAG)
+endif
+
+
+# biolab1 with gnu 3.2.2 compiler  
+ifeq (gnu,$(_ARCH))
+#    FFTW_PATH = /opt/fftw3gnu
+    USRLIB =
+#     -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -DUNIX -DFU -D_FILE_OFFSET_BITS=64 $(MPI_PREPROC_FLAG)
+    OPT_FLAG = -O3  
+    C = gcc
+    CC = g++
+    CPP = g++
+    ifeq (true,$(_MPI))
+    C=   mpicc
+    CC=  mpic++
+    CPP= mpic++
+    endif
+        
+    INCLUDE_FLAG = -I$(INCDIR) -I$(MAINDIR) -I$(PROPDIR)
+#-I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = $(OPT_FLAG) $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = $(OPT_FLAG) -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = $(OPT_FLAG) $(USRLIB_FLAG)
+endif
+
+# biolab1 with gnu 3.2.2 compiler (debug mode)  
+ifeq (gnud,$(_ARCH))
+#    FFTW_PATH = /opt/fftw3gnu
+    USRLIB =
+#     -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -DUNIX -DFU -D_FILE_OFFSET_BITS=64 $(MPI_PREPROC_FLAG)
+    OPT_FLAG = -g  
+    C = gcc
+    CC = g++
+    CPP = g++
+    ifeq (true,$(_MPI))
+    C=   mpicc
+    CC=  mpic++
+    CPP= mpic++
+    endif
+        
+    INCLUDE_FLAG = -I$(INCDIR) -I$(MAINDIR) -I$(PROPDIR)
+#-I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = $(OPT_FLAG) $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = $(OPT_FLAG) -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = $(OPT_FLAG) $(USRLIB_FLAG)
+endif
+
+
+# MVS50000 with Intel compiler  
+ifeq (mvs50k,$(_ARCH))
+#    FFTW_PATH = /nethome/valuev/extern/fftw-3.1.2/lib/
+    USRLIB = 
+# -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -DUNIX -D_FILE_OFFSET_BITS=64 $(MPI_PREPROC_FLAG) 
+    OPT_FLAG = -O2
+    C = mpicc
+    CC = mpiCC
+    CPP = mpiCC
+    INCLUDE_FLAG = -I$(INCDIR) -I$(MAINDIR) -I$(PROPDIR)
+#-I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = $(OPT_FLAG) $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = $(OPT_FLAG) -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = $(USRLIB_FLAG)
+endif
+
+
+
+
+
+# biolab1 with gnu 4.1.2 compiler  
+ifeq (biolab1gnu412,$(_ARCH))
+    COMP_PATH = /opt/gcc412
+    FFTW_PATH = /opt/fftw3gnu
+    USRLIB = -L$(COMP_PATH)/lib -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -DUNIX $(MPI_PREPROC_FLAG) 
+    OPT_FLAG = -static
+    C = $(COMP_PATH)/bin/gcc
+    CC = $(COMP_PATH)/bin/g++
+    CPP = $(COMP_PATH)/bin/g++
+    INCLUDE_FLAG = -I$(INCDIR) -I$(PHOTDIR) -I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = $(OPT_FLAG) $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = $(OPT_FLAG) -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = $(OPT_FLAG) $(USRLIB_FLAG)
+endif
+
+
+# MVS15000 with IBM compiler  
+ifeq (mvs15k,$(_ARCH))
+    FFTW_PATH = /nethome/valuev/extern/fftw-3.1.2/lib/
+    USRLIB =  -L$(FFTW_PATH)/lib -lfftw3  
+    PREPROC_FLAGS = -DUNIX $(MPI_PREPROC_FLAG) 
+    OPT_FLAG = -O5
+    C = mpicc
+    CC = mpiCC
+    CPP = mpiCC
+    INCLUDE_FLAG = -I$(INCDIR) -I$(PHOTDIR) -I$(FFTW_PATH)/include
+    USRLIB_FLAG = 
+    CFLAGS = $(OPT_FLAG) $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    CPPFLAGS = $(OPT_FLAG) -MD $(PREPROC_FLAGS) $(INCLUDE_FLAG)
+    OFLAG = $(OPT_FLAG) $(USRLIB_FLAG)
+endif
+

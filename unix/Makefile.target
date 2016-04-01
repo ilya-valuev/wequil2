@@ -1,0 +1,79 @@
+#----------------------------------------------------------------------
+#   FDTD-II, Kintech Kinetic Technologies 2007
+#----------------------------------------------------------------------
+#
+# Variable _ARCH identifies the name of the directory
+# in which object files are saved, and also identifies
+# which compiler options are specified in Makefile
+# The variable DEFAULT_ARCH contains the default value.
+# DEFAULT_ARCH is set in the main makefile (Makefile)
+# To choose a different value, users can edit this, 
+# or invoke make using
+#     make _ARCH = <user's architecture>
+#
+.SUFFIXES:
+# Find the target directory(ies).
+#
+# Assign a default value _ARCH
+USED_DEFAULT_ARCH = 0
+ifndef _ARCH
+# This method insufficiently flexible
+#  _ARCH := $(shell uname -s)
+  USED_DEFAULT_ARCH = 1
+ _ARCH := $(DEFAULT_ARCH)
+  export _ARCH
+endif
+
+OBJDIR := Obj_$(_ARCH)
+#
+# USe different directory for parallel version
+#
+ifeq (true,$(_MPI))
+	OBJDIR := Obj_$(_ARCH)_mpi
+endif
+export OBJDIR
+
+# Define the rules to build in the target subdirectories.
+#
+MAKETARGET = $(MAKE) --no-print-directory -C $@ -f $(CURDIR)/Makefile \
+		SRCDIR=$(CURDIR) $(MAKECMDGOALS)
+
+.PHONY: $(OBJDIR)
+$(OBJDIR):
+	+@mkdir -p $@
+	+@$(MAKETARGET)
+
+# These rules keep make from trying to use the match-anything rule below to
+# rebuild the makefiles--ouch!  Obviously, if you don't follow my convention
+# of using a `.mk' suffix on all non-standard makefiles you'll need to change
+# the pattern rule.
+#
+# If you mess this up, the recursion will generate weird errors.
+#
+# for example: invoking 'make clean _ARCH=serial' yields: 
+#      make[1]: *** No rule to make target `clean'.  Stop.
+#      make: *** [Obj_serial] Error 2
+
+Makefile : ;
+Makefile.target :: ;
+
+# Anything we don't know how to build will use this rule.  The command is a
+# do-nothing command, but the prerequisites ensure that the appropriate
+# recursive invocations of make will occur.
+#
+% :: $(OBJDIR) ;
+
+# The clean rule is best handled from the source directory: since we're
+# rigorous about keeping the target directories containing only target files
+# and the source directory containing only source files, `clean' is as trivial
+# as removing the target directories!
+#
+.PHONY: clean
+ifeq ($(USED_DEFAULT_ARCH),0)
+  clean:
+	rm -rf $(OBJDIR)
+else
+  clean:
+	@echo 'Not allowed to clean default targets'
+	@echo 'Use: make clean _ARCH=$(DEFAULT_ARCH)'
+endif
